@@ -43,14 +43,6 @@ objPos& objPos::operator=(const objPos& o) {
     return *this;  
 }
 
-objPos::objPos(const objPos& o) {
-    pos = new Pos;  // Add this line
-    pos->x = o.pos->x;
-    pos->y = o.pos->y;
-    symbol = o.symbol;
-}
-
-
 void objPos::setObjPos(objPos o)
 {
     pos->x = o.pos->x;
