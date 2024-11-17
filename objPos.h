@@ -14,12 +14,18 @@ class objPos
         Pos* pos;        
         char symbol;
 
-        objPos();
+        // Constructors
+        objPos();        
+        objPos(const objPos& o);
         objPos(int xPos, int yPos, char sym);
         
+        // Destructor
+        ~objPos();
+
         // Respect the rule of six / minimum four
         // [TODO] Implement the missing special member functions to meet the minimum four rule
-        
+        objPos& operator=(const objPos& o);
+
         void setObjPos(objPos o);        
         void setObjPos(int xPos, int yPos, char sym);  
 
