@@ -6,6 +6,8 @@
 using namespace std;
 
 #define DELAY_CONST 100000
+#define BOARD_HEIGHT 9
+#define BOARD_WIDTH 19
 
 Player *myPlayer; // Global pointer meant to instantiate a Player object on the heap
 GameMechs *myGM; // Global pointer meant to instantiate a Game Mechanics class
@@ -62,8 +64,34 @@ void DrawScreen(void)
 
     // Print player coordinates 
     MacUILib_printf("Player [x, y, sym]: [%d, %d, %c]\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
-     
+    MacUILib_printf("\n");  
+
+    // DRAWING THE GAME BOARD
+    for(int y = 0; y <= BOARD_HEIGHT; y++) // Iterate through each character location on the game board
+    {
+        for(int x = 0; x <= BOARD_WIDTH; x++)
+        {
+            // Top and bottom boundaries
+            if(y == 0 || y == BOARD_HEIGHT)
+                MacUILib_printf("#");
+
+            // Left and right boundaries
+            else if(x == 0 || x == BOARD_WIDTH)
+                MacUILib_printf("#");
+            
+            // Player object position (only if not on a boundary)
+            else if(x == playerPos.pos->x && y == playerPos.pos->y)
+                MacUILib_printf("%c", playerPos.symbol); // Print the player symbol
+
+            // inner space
+            else
+                MacUILib_printf(" ");
+        }
+        MacUILib_printf("\n");  // Move to the next line after printing the row
+    }
 }
+
+
 
 void LoopDelay(void)
 {
