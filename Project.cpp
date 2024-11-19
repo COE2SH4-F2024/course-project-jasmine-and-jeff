@@ -1,34 +1,15 @@
 #include <iostream>
-#include "MacUILib.h"
-#include "objPos.h"
-
-#include "Player.h"
+#include "MacUILib.h" // not using cout because it is synchronous printing, whereas MacUILIb_printf is asynchronous
+#include "objPos.h" // include objPos class
+#include "Player.h" // include Player class
 
 using namespace std;
 
 #define DELAY_CONST 100000
-#define MAX_SPEED 10
 
-Player *myPlayer;
-GameMechs *myGameMechs;
-objPos *mySnake;
-char  input;
-bool exitFlag = false;
-bool loseFlag = false;
-int score = 0;
-int boardSizeX = 20;
-int boardSizeY = 10;
-int speed = 1;
-enum Direction {
-    STOP,
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    DEFAULT = STOP
-};
+Player *myPlayer; // Global pointer meant to instantiate a Player object on the heap
+GameMechs *myGM; // Global pointer meant to instantiate a Game Mechanics class
 
-Direction currentDirection = Direction::STOP;
 
 void Initialize(void);
 void GetInput(void);
@@ -41,90 +22,47 @@ void CleanUp(void);
 
 int main(void)
 {
-
     Initialize();
 
-    while(myGameMechs->getExitFlagStatus() == false)  
+    while(myGM->getExitFlagStatus() == false)  
     {
         GetInput();
         RunLogic();
         DrawScreen();
         LoopDelay();
     }
-
     CleanUp();
-
 }
-
 
 void Initialize(void)
 {
     MacUILib_init();
     MacUILib_clearScreen();
-    MacUILib_Delay(100000);
-    myGameMechs = new GameMechs();
-    myPlayer = new Player(myGameMechs);
-    
+
+    myGM = new GameMechs(); // instantiate GM object on heap
+    myPlayer = new Player(myGM); // instantiate player object on heap
 }
 
 void GetInput(void)
 {
-   if (MacUILib_hasChar()) { // Check for input
-        myGameMechs->setInput(MacUILib_getChar());
 
-        switch (myGameMechs->getInput()) {
-            case 'w': case 'W': 
-                if (currentDirection != Direction::DOWN){
-                    currentDirection = UP; 
-                    myPlayer->updatePlayerDir();    
-                }
-                break;
-            case 's': case 'S': 
-                if (currentDirection != Direction::UP){
-                    currentDirection = DOWN; 
-                    myPlayer->updatePlayerDir();
-                }
-                    break;
-            case 'a': case 'A': 
-                if (currentDirection != Direction::RIGHT){
-                    currentDirection = LEFT; 
-                    myPlayer->updatePlayerDir();
-                }
-                break;
-            case 'd': case 'D': 
-                if (currentDirection != Direction::LEFT) {
-                currentDirection = RIGHT; 
-                myPlayer->updatePlayerDir();
-                }
-                break;
-            case ' ': 
-                myGameMechs->setExitTrue(); 
-                break;       // Exit on space
-            case 'q': case 'Q':                  // Change speed
-                speed = (speed < MAX_SPEED) ? speed + 1 : 1;
-                break;
-        }
-        myPlayer->movePlayer();
-        
-    }
 }
-
 
 void RunLogic(void)
 {
-    if (currentDirection != Direction::STOP) {
-        myPlayer->movePlayer();
-    }
+    
 }
 
 void DrawScreen(void)
 {
-    MacUILib_clearScreen(); 
+    MacUILib_clearScreen(); // asynchronous non-blocking input
 
-    objPos playerPos = myPlayer->getPlayerPos();
+    // Create an object that will receive player position
+    objPos playerPos = myPlayer->getPlayerPos(); // use arrow cuz myPlayer is a pointer to a Player object
 
-    MacUILib_printf("Player Pos [x, y, sym]: %d, %d, %c\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
-    MacUILib_printf("Position: (%d, %d)\n", myPlayer->getPlayerPos().pos->x,  myPlayer->getPlayerPos().pos->y);
+    // Print player coordinates 
+    MacUILib_printf("Player [x, y, sym]: [%d, %d, %c]\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
+     
 }
 
 void LoopDelay(void)
@@ -132,13 +70,12 @@ void LoopDelay(void)
     MacUILib_Delay(DELAY_CONST); // 0.1s delay
 }
 
-
 void CleanUp(void)
 {
-    MacUILib_clearScreen();    
-    
-    delete myPlayer;
-    delete myGameMechs;
+    MacUILib_clearScreen();   
+
+    delete myPlayer; 
+    delete myGM;
 
     MacUILib_uninit();
 }

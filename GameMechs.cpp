@@ -1,9 +1,13 @@
 #include "GameMechs.h"
 #include "MacUILib.h"
 
+// Constructors
+// ===================================================
+
+// Default Constructor
 GameMechs::GameMechs()
-{ 
-    MacUILib_printf("GameMechs Initialized\n");
+{
+    // Initialize Default values
     input = 0;
     exitFlag = false;
     loseFlag = false;
@@ -11,17 +15,18 @@ GameMechs::GameMechs()
 
     boardSizeX = 20;
     boardSizeY = 10;
-
-   
 }
 
+// Parameterized Constructor
 GameMechs::GameMechs(int boardX, int boardY)
 {
+    // Same as Default constructor  
     input = 0;
     exitFlag = false;
     loseFlag = false;
     score = 0;
 
+    // Initialize Board values
     boardSizeX = boardX;
     boardSizeY = boardY;
 }
@@ -29,9 +34,12 @@ GameMechs::GameMechs(int boardX, int boardY)
 // do you need a destructor?
 GameMechs::~GameMechs()
 {
-    
+    // Nothing on the heap
+    // Destructor of gameMechs class can stay empty FOR NOW
 }
 
+// Getters
+// ===================================================
 bool GameMechs::getExitFlagStatus() const
 {
     return exitFlag;
@@ -39,27 +47,27 @@ bool GameMechs::getExitFlagStatus() const
 
 bool GameMechs::getLoseFlagStatus() const
 {
-    return loseFlag;
+
 }
     
 
 char GameMechs::getInput()
 {
-    if (MacUILib_hasChar()) { //Checks for input
-        input = MacUILib_getChar();
-        // printf("Input: %c\n", input);
-    }
-    return input;
+    // Asynchronous Input - non blocking character read-in (Same as PPA1)
+    if(MacUILib_hasChar()) // Check if a character is available
+    {
+        input = MacUILib_getChar(); // Get the character
+    }   
 }
 
 int GameMechs::getScore() const
 {
-    return score;
+
 }
 
 void GameMechs::incrementScore()
 {
-    score++;
+    
 }
 
 int GameMechs::getBoardSizeX() const
@@ -72,25 +80,26 @@ int GameMechs::getBoardSizeY() const
     return boardSizeY;
 }
 
-
+// Setters
+// ===================================================
 void GameMechs::setExitTrue()
 {
-    exitFlag = true;
+
 }
 
 void GameMechs::setLoseFlag()
 {
-    loseFlag = true;   
+    
 }
 
 void GameMechs::setInput(char this_input)
 {
-    input = this_input;
+
 }
 
 void GameMechs::clearInput()
 {
-    input = 0;
+
 }
 
 // More methods should be added here

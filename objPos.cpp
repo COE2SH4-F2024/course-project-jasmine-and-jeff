@@ -1,48 +1,68 @@
 #include "objPos.h"
-#include <utility>  
 
-objPos::objPos()
+// Constructor Methods
+//=====================================================================
+
+// Default Constructor
+objPos::objPos() 
 {
-    pos = new Pos;
+    pos = new Pos; // Create pointer to struct on heap
+                   // stores single object of type pos -> (pos.x = _ , pos.y = _ )
     pos->x = 0;
     pos->y = 0;
     symbol = 0; //NULL
 }
 
-objPos::objPos(int xPos, int yPos, char sym)
+// Parameterized Constructor
+objPos::objPos(int xPos, int yPos, char sym) 
 {
     pos = new Pos;
-    pos->x = xPos;
+    pos->x = xPos; 
     pos->y = yPos;
     symbol = sym;
 }
 
 // Respect the rule of six / minimum four
 // [TODO] Implement the missing special member functions to meet the minimum four rule
+//=====================================================================
 
-objPos::~objPos()
+// Destructor
+objPos::~objPos() 
 {
-    delete pos;
+    delete pos; // deallocation
+    pos = nullptr;
 }
 
-objPos::objPos(const objPos& o){
+// Copy Constructor
+objPos::objPos(const objPos& o) 
+{
+    pos = new Pos;
+
+    // Copy the x,y values and symbol from source object
     pos->x = o.pos->x;
     pos->y = o.pos->y;
-    symbol = o.symbol;
+    symbol = o.symbol; 
 }
 
-objPos& objPos::operator=(const objPos& o) {
-    if (this != &o) {  
-        delete pos; 
-        pos = new Pos;  
+// Copy Assignment Operator 
+objPos& objPos::operator=(const objPos& o)
+{
+    if(this != &o) // Self-assignment check
+    {
+        // Free the existing memory to prevent memory leaks
+        delete pos;
         
+        // Allocate new memory and copy contents from source object
+        pos = new Pos;
         pos->x = o.pos->x;
         pos->y = o.pos->y;
         symbol = o.symbol;
     }
-    return *this;  
+    return *this;
 }
 
+// Setter Methods
+//=====================================================================
 void objPos::setObjPos(objPos o)
 {
     pos->x = o.pos->x;
@@ -57,6 +77,8 @@ void objPos::setObjPos(int xPos, int yPos, char sym)
     symbol = sym;
 }
 
+// Getter Methods
+//=====================================================================
 objPos objPos::getObjPos() const
 {
     objPos returnPos;

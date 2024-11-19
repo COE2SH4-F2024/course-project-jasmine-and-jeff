@@ -23,10 +23,14 @@ class GameMechs
         objPos food;
 
     public:
+        // Constructors
         GameMechs();
         GameMechs(int boardX, int boardY);
+
+        // Destructor
         ~GameMechs(); // is this one needed at all? Why or why not?
         
+        // Getters, Setters and Other
         bool getExitFlagStatus() const; 
         void setExitTrue();
         bool getLoseFlagStatus() const;

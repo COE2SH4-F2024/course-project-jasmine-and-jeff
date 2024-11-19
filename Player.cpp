@@ -1,77 +1,82 @@
 #include "Player.h"
-#include "MacUILib.h"
+#include <iostream>
 
+// Constructor
+// ===================================================
 Player::Player(GameMechs* thisGMRef)
 {
     mainGameMechsRef = thisGMRef;
-    
-    MacUILib_printf("Player Initialized\n");
+    myDir = STOP; // Set the initial direction of the player to STOP
+
     // more actions to be included
-    playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2;
-    playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2;
+
+    // Construct player 
+    // Starting player position is at middle of board
+    playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2; 
+    playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2; 
     playerPos.symbol = '@';
 }
 
-
+// Destructor
+// ===================================================
 Player::~Player()
 {
     // delete any heap members here
+    // no keyword "new" in the constructor
+    // leave the descructor empty FOR NOW
 }
 
+// Other
+// ===================================================
 objPos Player::getPlayerPos() const
 {
-    // return the reference to the playerPos arrray list
-    return playerPos;
+    // return the reference to the playerPos array list
+    return playerPos; // playerPos holds x, y and symbol 
 }
 
 void Player::updatePlayerDir()
 {
-    // PPA3 input processing logic
-    char inputChar = mainGameMechsRef->getInput();
-    
-    switch(inputChar)
-    {
-        case 'w':
-            input = UP;
+    // Get input
+    char input = mainGameMechsRef -> getInput();
+
+    // PPA2 input processing logic   
+    switch(input)
+    {                      
+        case ' ':  // exit on space key
+            // exitFlag = 1; 
             break;
-        case 's':
-            input = DOWN;
+
+        case 'w':  // Move Up
+        case 'W':
+            if(myDir != UP && myDir != DOWN) // Move UP only if currently moving horizontally
+                myDir = UP;  
             break;
-        case 'a':
-            input = LEFT;
-            break;
-        case 'd':
-            input = RIGHT;
-            break;
-        case ' ':
-            mainGameMechsRef->setExitTrue();    
-            break;
+
+        case 'a':  // Move Left
+        case 'A':
+            if(myDir != LEFT && myDir != RIGHT) // Move LEFT only if currently moving vertically
+                myDir = LEFT;  
+            break; 
+
+        case 's':  // Move Down
+        case 'S':
+            if(myDir != UP && myDir != DOWN) // Move DOWN only if currently moving horizontally
+                myDir = DOWN;  
+            break; 
+
+        case 'd':  // Move Right
+        case 'D':
+            if(myDir != LEFT && myDir != RIGHT) // Move RIGHT only if currently moving vertically
+                myDir = RIGHT;  
+
         default:
-            // Keep the current direction if input is not recognized
             break;
     }
 }
+
 void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
-    int boardX = mainGameMechsRef->getBoardSizeX();
-    int boardY = mainGameMechsRef->getBoardSizeY();
-
-    // Update player position based on direction with wraparound
-    switch (input) {
-        case UP:
-            playerPos.pos->y = (playerPos.pos->y > 1) ? playerPos.pos->y - 1 : boardY - 2;
-            break;
-        case DOWN:
-            playerPos.pos->y = (playerPos.pos->y < boardY - 1 - 1) ? playerPos.pos->y + 1 : 1;
-            break;
-        case LEFT:
-            playerPos.pos->x = (playerPos.pos->x > 1) ? playerPos.pos->x - 1 : boardX - 2;
-            break;
-        case RIGHT:
-            playerPos.pos->x = (playerPos.pos->x < boardX - 1 - 1) ? playerPos.pos->x + 1 : 1;
-            break;
-        default:
-            break;
-    }
 }
+
+// More methods to be added
