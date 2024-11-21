@@ -6,8 +6,6 @@
 using namespace std;
 
 #define DELAY_CONST 100000
-#define BOARD_HEIGHT 9
-#define BOARD_WIDTH 19
 
 Player *myPlayer; // Global pointer meant to instantiate a Player object on the heap
 GameMechs *myGM; // Global pointer meant to instantiate a Game Mechanics class
@@ -65,37 +63,33 @@ void DrawScreen(void)
     MacUILib_clearScreen(); // asynchronous non-blocking input
     
     objPos playerPos = myPlayer->getPlayerPos(); // Create an object that will receive player position
+    int boardX = myGM->getBoardSizeX();
+    int boardY = myGM->getBoardSizeY();
 
     // GAME BOARD PRINTING LOGIC
     //=====================================================
-    for(int y = 0; y <= BOARD_HEIGHT; y++) // Iterate through each character location on the game board
-    {
-        for(int x = 0; x <= BOARD_WIDTH; x++)
-        {
-            // Top and bottom boundaries
-            if(y == 0 || y == BOARD_HEIGHT)
-                MacUILib_printf("#");
 
-            // Left and right boundaries
-            else if(x == 0 || x == BOARD_WIDTH)
+    // Iterate through each character location on the game board
+    for(int row = 0; row <= boardY; row++)  // y-direction
+    {
+        for(int col = 0; col <= boardX; col++)  // x-direction
+        {
+            if(row == 0 || row == boardY || col == 0 || col == boardX) // Draw Border
                 MacUILib_printf("#");
             
-            // Player object position (only if not on a boundary)
-            else if(x == playerPos.pos->x && y == playerPos.pos->y)
-                MacUILib_printf("%c", playerPos.symbol); // Print the player symbol
+            else if(row == playerPos.pos->y && col == playerPos.pos->x) // Draw Player Character (only if not on a boundary)
+                MacUILib_printf("%c", playerPos.symbol);
 
-            // inner space
-            else
+            else    // Draw Spaces
                 MacUILib_printf(" ");
         }
-        MacUILib_printf("\n");  // Move to the next line after printing the row
+        MacUILib_printf("%c", '\n');  // Move to the next line after printing the row
     }
 
     // Debugging messages
     //=====================================================
     MacUILib_printf("\n\n");
     MacUILib_printf("===Debugging Messages===\n");
-    MacUILib_printf("Key pressed: %c\n", myGM->getInput());  
 
     // Print player coordinates 
     MacUILib_printf("Current Player Coordinates [x, y, sym]: [%d, %d, %c]\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol); 
@@ -105,7 +99,8 @@ void DrawScreen(void)
     MacUILib_printf("Press 'i' to increment the Score\n");  
 
     // Lose flag debug
-    MacUILib_printf("Press 'l' to test the Lose Flag.\n");
+    MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)\n");
+    MacUILib_printf("Press ' ' to Exit the Program\n"); 
 }
 
 void LoopDelay(void)
@@ -115,16 +110,16 @@ void LoopDelay(void)
 
 void CleanUp(void)
 {
-    MacUILib_clearScreen();   
+    //MacUILib_clearScreen();   
 
-    // End Game Messages
+    // End Game Messages  
     //=====================================================
     if(myGM->getExitFlagStatus() == true) 
     {
         MacUILib_printf("\n===End of Game Message===\n");   
         MacUILib_printf("Game Ended by Player Command.\n");
     }
-    else if(myGM->getLoseFlagStatus() == true) 
+    else if(myGM->getLoseFlagStatus() == true) // (LOSE FLAG IS CURRENTLY NOT FUNCTIONAL IN CLEANUP. WILL BECOME FUNCTIONAL IN NEXT ITER)
     {
         MacUILib_printf("\n===End of Game Message===\n");   
         MacUILib_printf("You lost! The snake bumped into itself.\n");
@@ -137,3 +132,4 @@ void CleanUp(void)
 
     MacUILib_uninit();
 }
+
