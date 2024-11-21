@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <iostream>
+#include "MacUILib.h"
 
 // Constructor
 // ===================================================
@@ -36,14 +37,22 @@ objPos Player::getPlayerPos() const
 
 void Player::updatePlayerDir()
 {
-    // Get input
+    // Get input from the GameMechs object
     char input = mainGameMechsRef -> getInput();
 
     // PPA2 input processing logic   
     switch(input)
     {                      
         case ' ':  // exit on space key
-            // exitFlag = 1; 
+            mainGameMechsRef->setExitTrue(); // Set exit flag
+            break;
+
+        case 'i':  // Debug key: Increment score
+            mainGameMechsRef->incrementScore();
+            break;
+
+        case 'l':  // Debug key: test lose flag
+            mainGameMechsRef->setLoseFlag();
             break;
 
         case 'w':  // Move Up
@@ -69,9 +78,10 @@ void Player::updatePlayerDir()
             if(myDir != LEFT && myDir != RIGHT) // Move RIGHT only if currently moving vertically
                 myDir = RIGHT;  
 
-        default:
+        default: 
             break;
     }
+    mainGameMechsRef->clearInput(); // Clear the input after processing
 }
 
 void Player::movePlayer()

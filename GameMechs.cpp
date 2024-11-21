@@ -1,5 +1,6 @@
 #include "GameMechs.h"
 #include "MacUILib.h"
+#include <iostream>
 
 // Constructors
 // ===================================================
@@ -13,8 +14,8 @@ GameMechs::GameMechs()
     loseFlag = false;
     score = 0;
 
-    boardSizeX = 20;
-    boardSizeY = 10;
+    boardSizeX = 20; // Default constant width
+    boardSizeY = 10; // Default constant height
 }
 
 // Parameterized Constructor
@@ -47,7 +48,7 @@ bool GameMechs::getExitFlagStatus() const
 
 bool GameMechs::getLoseFlagStatus() const
 {
-
+    return loseFlag;
 }
     
 
@@ -58,16 +59,17 @@ char GameMechs::getInput()
     {
         input = MacUILib_getChar(); // Get the character
     }   
+    return input;
 }
 
 int GameMechs::getScore() const
 {
-
+    return score;
 }
 
 void GameMechs::incrementScore()
 {
-    
+    score++; 
 }
 
 int GameMechs::getBoardSizeX() const
@@ -84,22 +86,22 @@ int GameMechs::getBoardSizeY() const
 // ===================================================
 void GameMechs::setExitTrue()
 {
-
+    exitFlag = true;
 }
 
 void GameMechs::setLoseFlag()
 {
-    
+    loseFlag = true; // Set the lose flag to true
 }
 
 void GameMechs::setInput(char this_input)
 {
-
+    input = this_input; // Assign the provided input
 }
 
 void GameMechs::clearInput()
 {
-
+    input = 0; // Reset input 
 }
 
 // More methods should be added here
