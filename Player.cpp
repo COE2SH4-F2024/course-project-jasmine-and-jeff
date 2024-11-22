@@ -15,7 +15,7 @@ Player::Player(GameMechs* thisGMRef)
     // Starting player position is at middle of board
     playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2; 
     playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2; 
-    playerPos.symbol = '@';
+    playerPos.symbol = '*';
 }
 
 // Destructor

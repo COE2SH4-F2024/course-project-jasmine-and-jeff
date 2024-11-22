@@ -54,10 +54,6 @@ void GetInput(void)
 
 void RunLogic(void)
 {
-    // Check if the input is 'l' to trigger the lose flag
-    if (myGM->getInput() == 'l'){
-        myGM->setExitTrue();
-    }
     // Update the player's direction based on input
     myPlayer->updatePlayerDir();
     // Move the player based on the updated direction
@@ -125,7 +121,7 @@ void CleanUp(void)
         MacUILib_printf("\n===End of Game Message===\n");   
         MacUILib_printf("Game Ended by Player Command.\n");
     }
-    else if(myGM->getLoseFlagStatus() == true) // (LOSE FLAG IS CURRENTLY NOT FUNCTIONAL IN CLEANUP. WILL BECOME FUNCTIONAL IN NEXT ITER)
+    else if(myGM->getExitFlagStatus() == true) // (LOSE FLAG IS CURRENTLY NOT FUNCTIONAL IN CLEANUP. WILL BECOME FUNCTIONAL IN NEXT ITER)
     {
         MacUILib_printf("\n===End of Game Message===\n");   
         MacUILib_printf("You lost! The snake bumped into itself.\n");
