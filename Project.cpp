@@ -54,8 +54,14 @@ void GetInput(void)
 
 void RunLogic(void)
 {
+    // Check if the input is 'l' to trigger the lose flag
+    if (myGM->getInput() == 'l'){
+        myGM->setExitTrue();
+    }
     // Update the player's direction based on input
     myPlayer->updatePlayerDir();
+    // Move the player based on the updated direction
+    myPlayer->movePlayer();
 }
 
 void DrawScreen(void)
@@ -99,7 +105,7 @@ void DrawScreen(void)
     MacUILib_printf("Press 'i' to increment the Score\n");  
 
     // Lose flag debug
-    MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)\n");
+    MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)[now functional <3 -Jeff]\n");
     MacUILib_printf("Press ' ' to Exit the Program\n"); 
 }
 
