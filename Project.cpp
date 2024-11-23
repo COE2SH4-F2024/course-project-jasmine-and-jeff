@@ -36,18 +36,14 @@ void Initialize(void)
 
     myGM = new GameMechs(); // instantiate GM object on heap
     myPlayer = new Player(myGM); // instantiate player object on heap
+
+    myGM->generateFood(myPlayer->getPlayerPos()); // randomly generate food 
 }
 
 void GetInput(void)
 {
     // Collect input from GameMechs
-    char user_input = myGM->getInput();
-
-    // Check if a valid input was collected
-    if(user_input != 0)  // `0` indicates no input was collected
-    {
-        myGM->setInput(user_input); // Store the input in the GameMechs object
-    }
+    myGM->collectAsyncInput();
 }
 
 void RunLogic(void)
@@ -61,6 +57,8 @@ void DrawScreen(void)
     MacUILib_clearScreen(); // asynchronous non-blocking input
     
     objPos playerPos = myPlayer->getPlayerPos(); // Create an object that will receive player position
+    objPos foodPos = myGM->getFoodPos();
+
     int boardX = myGM->getBoardSizeX();
     int boardY = myGM->getBoardSizeY();
 
@@ -73,13 +71,16 @@ void DrawScreen(void)
         for(int col = 0; col <= boardX; col++)  // x-direction
         {
             if(row == 0 || row == boardY || col == 0 || col == boardX) // Draw Border
-                MacUILib_printf("#");
+                MacUILib_printf("%c", '#');
             
             else if(row == playerPos.pos->y && col == playerPos.pos->x) // Draw Player Character (only if not on a boundary)
                 MacUILib_printf("%c", playerPos.symbol);
 
+            else if(row == foodPos.pos->y && col == foodPos.pos->x) // Draw Food Character (only if not on a boundary or Player)
+                MacUILib_printf("%c", foodPos.symbol);
+
             else    // Draw Spaces
-                MacUILib_printf(" ");
+                MacUILib_printf("%c", ' ');
         }
         MacUILib_printf("%c", '\n');  // Move to the next line after printing the row
     }
@@ -92,18 +93,15 @@ void DrawScreen(void)
 
     // Debugging Messages
     //=====================================================
-    MacUILib_printf("\n\n");
-    MacUILib_printf("===Debugging Messages===\n");
-
-    // Print player coordinates 
+    MacUILib_printf("\n\n===Debugging Messages===\n");
     MacUILib_printf("Current Player Coordinates [x, y, sym]: [%d, %d, %c]\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol); 
+    MacUILib_printf("Current Food Coordinates: [x, y]: [%d, %d, %c]\n", foodPos.pos->x, foodPos.pos->y, foodPos.symbol);
 
-    // Score Debug
+    // Temporary Debug keys
     MacUILib_printf("Current Score: %d\n", myGM->getScore());
     MacUILib_printf("Press 'i' to increment the Score\n");  
-
-    // Lose flag debug
     MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)\n");
+    MacUILib_printf("Press 'g' to test the random Food generation. \n");
     MacUILib_printf("Press ' ' to Exit the Program\n"); 
 }
 

@@ -42,14 +42,21 @@ void Player::updatePlayerDir()
 
     // PPA2 input processing logic   
     switch(input)
-    {                      
-        case 'i':  // Debug key: Increment score
+    {              
+        // TEMPORARY DEBUG KEYS
+        //=====================================================        
+        case 'i':  // test increment score
             mainGameMechsRef->incrementScore();
             break;
 
-        case 'l':  // Debug key: test lose flag
+        case 'l':  // test lose flag
             mainGameMechsRef->setLoseFlag();
             break;
+
+        case 'g':  // test generate food
+            mainGameMechsRef->generateFood(getPlayerPos());
+            break;
+        //======================================================
 
         case 'w':  // Move Up
         case 'W':

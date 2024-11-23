@@ -19,6 +19,8 @@ GameMechs::GameMechs()
 
     boardSizeX = 20; // Default constant width
     boardSizeY = 10; // Default constant height
+
+    food.setObjPos(-10, -10, 'o'); // Initialize the food object outside the gameboard
 }
 
 // Parameterized Constructor
@@ -33,6 +35,8 @@ GameMechs::GameMechs(int boardX, int boardY)
     // Initialize Board values
     boardSizeX = boardX;
     boardSizeY = boardY;
+
+    food.setObjPos(-10, -10, 'o'); // Initialize the food object outside the gameboard
 }
 
 // do you need a destructor?
@@ -53,9 +57,8 @@ bool GameMechs::getLoseFlagStatus() const
 {
     return loseFlag;
 }
-    
 
-char GameMechs::getInput()
+void GameMechs::collectAsyncInput()
 {
     // Asynchronous Input - non blocking character read-in (Same as PPA1)
     if(MacUILib_hasChar()) // Check if a character is available
@@ -63,10 +66,14 @@ char GameMechs::getInput()
         input = MacUILib_getChar(); // Get the character
     }   
 
-    if(input == ' ') // exit on space key
+    if(input == ' ') // Check exit flag
     {
         setExitTrue(); 
     }   
+}
+
+char GameMechs::getInput()
+{
     return input;
 }
 
@@ -150,4 +157,33 @@ int GameMechs::setDelayAmount(int this_amount)
 {
     delayAmount = this_amount;
     return delayAmount;
+}
+
+
+// Food Generation
+// ===================================================
+void GameMechs::generateFood(objPos blockOff)
+{ 
+    int randX; int randY;
+
+    // Infinite loop to keep generating until a valid position is found
+    while(true) 
+    {
+        // Generate random x-y coordinates
+        randX = rand() % (getBoardSizeX()-1) + 1; // Generate x in the range [1, xRange-1] -> [1, 18]
+        randY = rand() % (getBoardSizeY()-1) + 1; // Generate y in the range [1, yRange-1] -> [1, 8]
+
+        // Check if the generated position does not conflict with the player's position
+        if(randX != blockOff.pos->x || randX != blockOff.pos->y)
+        {
+            // Valid position found, store it
+            food.setObjPos(randX, randY, 'o');
+            break; // Exit the loop
+        }
+    } 
+}
+
+objPos GameMechs::getFoodPos() const
+{
+    return food;
 }

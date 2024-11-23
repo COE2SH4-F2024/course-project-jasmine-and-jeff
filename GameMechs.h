@@ -51,6 +51,7 @@ class GameMechs
         void incrementScore();
         
         // More methods should be added here
+        void collectAsyncInput();
 
         // Player Speed Controls
         int getSpeed();
@@ -58,6 +59,10 @@ class GameMechs
         int decreaseSpeed();
         int getDelayAmount();
         int setDelayAmount(int this_amount);
+
+        // Food Generation
+        void generateFood(objPos blockOff);
+        objPos getFoodPos() const;
 };
 
 #endif
