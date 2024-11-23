@@ -5,10 +5,8 @@
 
 using namespace std;
 
-#define DELAY_CONST 100000
-
 Player *myPlayer; // Global pointer meant to instantiate a Player object on the heap
-GameMechs *myGM; // Global pointer meant to instantiate a Game Mechanics class
+GameMechs *myGM; // Global pointer meant to instantiate a Game Mechanics object on the heap
 
 void Initialize(void);
 void GetInput(void);
@@ -53,11 +51,9 @@ void GetInput(void)
 }
 
 void RunLogic(void)
-{
-    // Update the player's direction based on input
-    myPlayer->updatePlayerDir();
-    // Move the player based on the updated direction
-    myPlayer->movePlayer();
+{  
+    myPlayer->updatePlayerDir(); 
+    myPlayer->movePlayer(); 
 }
 
 void DrawScreen(void)
@@ -88,7 +84,13 @@ void DrawScreen(void)
         MacUILib_printf("%c", '\n');  // Move to the next line after printing the row
     }
 
-    // Debugging messages
+    // Console Messages
+    //=====================================================
+    MacUILib_printf("\nCurrent Game Speed: %d\n", myGM->getSpeed());
+    MacUILib_printf("Press = to increase the Game Speed\n");
+    MacUILib_printf("Press - to decrease the Game Speed\n");
+
+    // Debugging Messages
     //=====================================================
     MacUILib_printf("\n\n");
     MacUILib_printf("===Debugging Messages===\n");
@@ -101,13 +103,13 @@ void DrawScreen(void)
     MacUILib_printf("Press 'i' to increment the Score\n");  
 
     // Lose flag debug
-    MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)[now functional <3 -Jeff]\n");
+    MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)\n");
     MacUILib_printf("Press ' ' to Exit the Program\n"); 
 }
 
 void LoopDelay(void)
 {
-    MacUILib_Delay(DELAY_CONST); // 0.1s delay
+    MacUILib_Delay(myGM->getDelayAmount());  // Use delayAmount for dynamic speed
 }
 
 void CleanUp(void)

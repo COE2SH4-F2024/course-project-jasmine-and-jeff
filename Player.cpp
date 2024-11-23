@@ -43,10 +43,6 @@ void Player::updatePlayerDir()
     // PPA2 input processing logic   
     switch(input)
     {                      
-        case ' ':  // exit on space key
-            mainGameMechsRef->setExitTrue(); // Set exit flag
-            break;
-
         case 'i':  // Debug key: Increment score
             mainGameMechsRef->incrementScore();
             break;
@@ -77,6 +73,15 @@ void Player::updatePlayerDir()
         case 'D':
             if(myDir != LEFT && myDir != RIGHT) // Move RIGHT only if currently moving vertically
                 myDir = RIGHT;  
+            break;
+
+        case '=':  // Increase speed
+            mainGameMechsRef->increaseSpeed();
+            break;
+
+        case '-':  // Decrease speed
+            mainGameMechsRef->decreaseSpeed();
+            break;
 
         default: 
             break;
@@ -105,7 +110,6 @@ void Player::movePlayer()
                 // Wrap around to the bottom (valid area)
                 playerPos.pos->y = validMaxY;
             }
-            MacUILib_printf("Y Position: %d", playerPos.pos->y);
             break;
 
         case DOWN:
@@ -116,7 +120,6 @@ void Player::movePlayer()
                 // Wrap around to the top (valid area)
                 playerPos.pos->y = validMinY;
             }
-            MacUILib_printf("Y Position: %d", playerPos.pos->y);
             break;
 
         case LEFT:
@@ -127,7 +130,6 @@ void Player::movePlayer()
                 // Wrap around to the right (valid area)
                 playerPos.pos->x = validMaxX;
             }
-            MacUILib_printf("X Position: %d", playerPos.pos->x);
             break;
 
         case RIGHT:
@@ -138,7 +140,6 @@ void Player::movePlayer()
                 // Wrap around to the left (valid area)
                 playerPos.pos->x = validMinX;
             }
-            MacUILib_printf("X Position: %d", playerPos.pos->x);
             break;
 
         default:
@@ -148,3 +149,4 @@ void Player::movePlayer()
 }
 
 // More methods to be added
+

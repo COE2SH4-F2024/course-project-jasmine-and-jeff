@@ -17,22 +17,18 @@ class Player
     public:
         enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
 
-        // Constructor
         Player(GameMechs* thisGMRef);
-
-        // Destructor
+        
         ~Player();
 
-        // Other
         objPos getPlayerPos() const; // Upgrade this in iteration 3.       
         void updatePlayerDir();
         void movePlayer();
-
+        
         // More methods to be added here
 
     private:
-        objPos playerPos;  // This is the Player's position (object of the OBJPOS class) which is holding player's x,y position and symbol
-                        // Upgrade this in iteration 3.     
+        objPos playerPos;  // Upgrade this in iteration 3.       
 
         enum Dir myDir;  // Declare a variable "myDir" to hold the current direction
 

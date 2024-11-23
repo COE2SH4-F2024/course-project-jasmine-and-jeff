@@ -22,6 +22,10 @@ class GameMechs
 
         objPos food;
 
+        // Speed Controls
+        int speed;        // Player speed level
+        int delayAmount;  // Delay between game loops (us)
+
     public:
         // Constructors
         GameMechs();
@@ -47,6 +51,13 @@ class GameMechs
         void incrementScore();
         
         // More methods should be added here
+
+        // Player Speed Controls
+        int getSpeed();
+        int increaseSpeed();
+        int decreaseSpeed();
+        int getDelayAmount();
+        int setDelayAmount(int this_amount);
 };
 
 #endif

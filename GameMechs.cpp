@@ -14,6 +14,9 @@ GameMechs::GameMechs()
     loseFlag = false;
     score = 0;
 
+    speed = 1;
+    delayAmount = 100000;
+
     boardSizeX = 20; // Default constant width
     boardSizeY = 10; // Default constant height
 }
@@ -58,6 +61,11 @@ char GameMechs::getInput()
     if(MacUILib_hasChar()) // Check if a character is available
     {
         input = MacUILib_getChar(); // Get the character
+    }   
+
+    if(input == ' ') // exit on space key
+    {
+        setExitTrue(); 
     }   
     return input;
 }
@@ -105,3 +113,41 @@ void GameMechs::clearInput()
 }
 
 // More methods should be added here
+
+// Player Speed Controls
+// ===================================================
+int GameMechs::getSpeed()
+{
+    return speed;
+}
+
+int GameMechs::increaseSpeed()
+{
+    if(speed < 5)  // Cap the speed at a maximum level (5x)
+    {
+        speed++;
+        delayAmount = delayAmount / 2;  // Halve the delay amount to increase speed
+    }
+    return speed;
+}
+
+int GameMechs::decreaseSpeed()
+{
+    if(speed > 1)  // Minimum speed level is 1x
+    {
+        speed--;
+        delayAmount = delayAmount * 2;  // Double the delay amount to decrease speed
+    }
+    return speed;
+}
+
+int GameMechs::getDelayAmount()
+{
+    return delayAmount;
+}
+
+int GameMechs::setDelayAmount(int this_amount)
+{
+    delayAmount = this_amount;
+    return delayAmount;
+}
