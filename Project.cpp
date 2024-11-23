@@ -1,12 +1,15 @@
 #include <iostream>
 #include "MacUILib.h" // not using cout because it is synchronous printing, whereas MacUILIb_printf is asynchronous
-#include "objPos.h" // include objPos class
-#include "Player.h" // include Player class
+#include "objPos.h" 
+#include "Player.h" 
+#include "Food.h" 
 
 using namespace std;
 
-Player *myPlayer; // Global pointer meant to instantiate a Player object on the heap
-GameMechs *myGM; // Global pointer meant to instantiate a Game Mechanics object on the heap
+// Global pointers meant to instantiate Objects on the heap
+Player *myPlayer;
+GameMechs *myGM;
+Food *myFood; 
 
 void Initialize(void);
 void GetInput(void);
@@ -34,10 +37,12 @@ void Initialize(void)
 {
     MacUILib_init();
 
-    myGM = new GameMechs(); // instantiate GM object on heap
-    myPlayer = new Player(myGM); // instantiate player object on heap
+    // Instantiate pointer to object on heap
+    myFood = new Food();  
+    myGM = new GameMechs(); 
+    myPlayer = new Player(myGM, myFood);
 
-    myGM->generateFood(myPlayer->getPlayerPos()); // randomly generate food 
+    myFood->generateFood(myPlayer->getPlayerPos()); // Randomly generate food 
 }
 
 void GetInput(void)
@@ -57,7 +62,7 @@ void DrawScreen(void)
     MacUILib_clearScreen(); // asynchronous non-blocking input
     
     objPos playerPos = myPlayer->getPlayerPos(); // Create an object that will receive player position
-    objPos foodPos = myGM->getFoodPos();
+    objPos foodPos = myFood->getFoodPos();
 
     int boardX = myGM->getBoardSizeX();
     int boardY = myGM->getBoardSizeY();
@@ -131,7 +136,7 @@ void CleanUp(void)
     // Continue clean up below
     delete myPlayer; 
     delete myGM;
-
+    delete myFood;    
     MacUILib_uninit();
 }
 

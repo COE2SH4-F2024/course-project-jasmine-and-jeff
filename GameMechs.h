@@ -20,11 +20,11 @@ class GameMechs
         int boardSizeX;
         int boardSizeY;
 
-        objPos food;
+        //objPos food;
 
         // Speed Controls
         int speed;        // Player speed level
-        int delayAmount;  // Delay between game loops (us)
+        int delayAmount;  // Delay between game loops (microseconds)
 
     public:
         // Constructors
@@ -60,9 +60,11 @@ class GameMechs
         int getDelayAmount();
         int setDelayAmount(int this_amount);
 
+        /*
         // Food Generation
         void generateFood(objPos blockOff);
         objPos getFoodPos() const;
+        */ 
 };
 
 #endif

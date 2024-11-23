@@ -4,9 +4,10 @@
 
 // Constructor
 // ===================================================
-Player::Player(GameMechs* thisGMRef)
+Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 {
     mainGameMechsRef = thisGMRef;
+    playerFoodRef = thisFoodRef;
     myDir = STOP; // Set the initial direction of the player to STOP
 
     // more actions to be included
@@ -53,9 +54,10 @@ void Player::updatePlayerDir()
             mainGameMechsRef->setLoseFlag();
             break;
 
-        case 'g':  // test generate food
-            mainGameMechsRef->generateFood(getPlayerPos());
-            break;
+        // case 'g':  // test generate food
+        //     thisFoodRef->generateFood(getPlayerPos());
+        //     //mainGameMechsRef->mainGameFoodRef(getPlayerPos());
+        //     break;
         //======================================================
 
         case 'w':  // Move Up

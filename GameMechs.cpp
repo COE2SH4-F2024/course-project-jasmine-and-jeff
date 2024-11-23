@@ -20,7 +20,7 @@ GameMechs::GameMechs()
     boardSizeX = 20; // Default constant width
     boardSizeY = 10; // Default constant height
 
-    food.setObjPos(-10, -10, 'o'); // Initialize the food object outside the gameboard
+    //food.setObjPos(-10, -10, 'o'); // Initialize the food object outside the gameboard
 }
 
 // Parameterized Constructor
@@ -32,11 +32,14 @@ GameMechs::GameMechs(int boardX, int boardY)
     loseFlag = false;
     score = 0;
 
+    speed = 1;
+    delayAmount = 100000;
+
     // Initialize Board values
     boardSizeX = boardX;
     boardSizeY = boardY;
 
-    food.setObjPos(-10, -10, 'o'); // Initialize the food object outside the gameboard
+    //food.setObjPos(-10, -10, 'o'); // Initialize the food object outside the gameboard
 }
 
 // do you need a destructor?
@@ -159,7 +162,7 @@ int GameMechs::setDelayAmount(int this_amount)
     return delayAmount;
 }
 
-
+/*
 // Food Generation
 // ===================================================
 void GameMechs::generateFood(objPos blockOff)
@@ -187,3 +190,5 @@ objPos GameMechs::getFoodPos() const
 {
     return food;
 }
+*/
+
