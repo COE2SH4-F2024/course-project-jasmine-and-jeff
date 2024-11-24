@@ -54,10 +54,10 @@ void Player::updatePlayerDir()
             mainGameMechsRef->setLoseFlag();
             break;
 
-        // case 'g':  // test generate food
-        //     thisFoodRef->generateFood(getPlayerPos());
-        //     //mainGameMechsRef->mainGameFoodRef(getPlayerPos());
-        //     break;
+        case 'g':  // test generate food
+            playerFoodRef->generateFood(getPlayerPos());
+            //mainGameMechsRef->mainGameFoodRef(getPlayerPos());
+            break;
         //======================================================
 
         case 'w':  // Move Up
@@ -96,8 +96,8 @@ void Player::updatePlayerDir()
             break;
     }
     mainGameMechsRef->clearInput(); // Clear the input after processing
-}
 
+}
 void Player::movePlayer()
 {
     // PPA3 Finite State Machine logic
@@ -106,9 +106,9 @@ void Player::movePlayer()
     
     // Define valid ranges for player movement (excluding boundary)
     int validMinX = 1;
-    int validMaxX = boardSizeX - 2;
+    int validMaxX = boardSizeX - 1;
     int validMinY = 1;
-    int validMaxY = boardSizeY - 2;
+    int validMaxY = boardSizeY - 1;
 
     switch (myDir) {
         case UP:

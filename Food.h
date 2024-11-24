@@ -7,19 +7,16 @@
 
 class Food
 {
+    private:
+        // Need a reference to the Main Game Mechanisms
+        GameMechs* myGM;
+        objPos foodPos;
     public:
-        Food();
+        Food(GameMechs* thisGMRef);
         ~Food();
 
         void generateFood(objPos blockOff);
         objPos getFoodPos() const;
-
-        private:
-        objPos foodPos;
-
-    private:
-        // Need a reference to the Main Game Mechanisms
-        GameMechs* myGM2;
 
 };
 

@@ -37,9 +37,9 @@ void Initialize(void)
 {
     MacUILib_init();
 
-    // Instantiate pointer to object on heap
-    myFood = new Food();  
+    // Instantiate pointer to object on heap 
     myGM = new GameMechs(); 
+    myFood = new Food(myGM); 
     myPlayer = new Player(myGM, myFood);
 
     myFood->generateFood(myPlayer->getPlayerPos()); // Randomly generate food 
