@@ -25,14 +25,20 @@ class Player
         objPos getPlayerPos() const; // Upgrade this in iteration 3.       
         void updatePlayerDir();
         void movePlayer();
-        
+        void growSnake();
         // More methods to be added here
+        bool foodCollision(objPos foodPos);
+        bool checkSelfCollision();
+        int getSize();
+        objPos getSnakeBody(int index) { return snakeBody.getElement(index); }
 
     private:
         objPos playerPos;  // Upgrade this in iteration 3.       
-
+        objPosArrayList snakeBody;
+        objPos currentHead;
+        objPos newHead;
         enum Dir myDir;  // Declare a variable "myDir" to hold the current direction
-
+        int size = 1;
         // Need a reference to the Main Game Mechanisms
         GameMechs* mainGameMechsRef;
         Food* playerFoodRef;

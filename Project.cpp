@@ -23,7 +23,7 @@ int main(void)
 {
     Initialize();
 
-    while(myGM->getExitFlagStatus() == false)  
+    while(myGM->getExitFlagStatus() == false || myGM->getLoseFlagStatus() == false)
     {
         GetInput();
         RunLogic();
@@ -55,6 +55,11 @@ void RunLogic(void)
 {  
     myPlayer->updatePlayerDir(); 
     myPlayer->movePlayer(); 
+    if(myPlayer->checkSelfCollision())
+    {
+        myGM->setLoseFlag();
+        myGM->setExitTrue();
+    }
 }
 
 void DrawScreen(void)
@@ -75,17 +80,28 @@ void DrawScreen(void)
     {
         for(int col = 0; col <= boardX; col++)  // x-direction
         {
-            if(row == 0 || row == boardY || col == 0 || col == boardX) // Draw Border
-                MacUILib_printf("%c", '#');
+            bool isSnakeBody = false;
+            // Check if current position is part of snake body
+            for(int k = 0; k < myPlayer->getSize(); k++)
+            {
+                playerPos = myPlayer->getSnakeBody(k);  // New method needed in Player class
+                if(row == playerPos.pos->y && col == playerPos.pos->x)
+                {
+                    MacUILib_printf("%c", playerPos.symbol);
+                    isSnakeBody = true;
+                    break;
+                }
+            }
             
-            else if(row == playerPos.pos->y && col == playerPos.pos->x) // Draw Player Character (only if not on a boundary)
-                MacUILib_printf("%c", playerPos.symbol);
-
-            else if(row == foodPos.pos->y && col == foodPos.pos->x) // Draw Food Character (only if not on a boundary or Player)
-                MacUILib_printf("%c", foodPos.symbol);
-
-            else    // Draw Spaces
-                MacUILib_printf("%c", ' ');
+            if(!isSnakeBody)
+            {
+                if(row == 0 || row == boardY || col == 0 || col == boardX)
+                    MacUILib_printf("%c", '#');
+                else if(row == foodPos.pos->y && col == foodPos.pos->x)
+                    MacUILib_printf("%c", foodPos.symbol);
+                else
+                    MacUILib_printf("%c", ' ');
+            }
         }
         MacUILib_printf("%c", '\n');  // Move to the next line after printing the row
     }
@@ -101,13 +117,15 @@ void DrawScreen(void)
     MacUILib_printf("\n\n===Debugging Messages===\n");
     MacUILib_printf("Current Player Coordinates [x, y, sym]: [%d, %d, %c]\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol); 
     MacUILib_printf("Current Food Coordinates: [x, y]: [%d, %d, %c]\n", foodPos.pos->x, foodPos.pos->y, foodPos.symbol);
-
+    MacUILib_printf("Current Size of Snake: %d\n", myPlayer->getSize());
+    MacUILib_printf("Collision Status: %d\n", myPlayer->checkSelfCollision());
     // Temporary Debug keys
     MacUILib_printf("Current Score: %d\n", myGM->getScore());
     MacUILib_printf("Press 'i' to increment the Score\n");  
     MacUILib_printf("Press 'l' to test the Lose Flag. (CURRENTLY NOT FUNCTIONAL)\n");
     MacUILib_printf("Press 'g' to test the random Food generation. \n");
     MacUILib_printf("Press ' ' to Exit the Program\n"); 
+    MacUILib_printf("Press 'q' to add segments to snake\n");
 }
 
 void LoopDelay(void)
@@ -121,17 +139,16 @@ void CleanUp(void)
 
     // End Game Messages  
     //=====================================================
-    if(myGM->getExitFlagStatus() == true) 
+    if(myGM->getLoseFlagStatus() == true) 
     {
         MacUILib_printf("\n===End of Game Message===\n");   
-        MacUILib_printf("Game Ended by Player Command.\n");
-    }
-    else if(myGM->getExitFlagStatus() == true) // (LOSE FLAG IS CURRENTLY NOT FUNCTIONAL IN CLEANUP. WILL BECOME FUNCTIONAL IN NEXT ITER)
+        MacUILib_printf("Game Over! The Snake Bumped Into Itself.\n");
+    }else if(myGM->getExitFlagStatus() == true)
     {
-        MacUILib_printf("\n===End of Game Message===\n");   
-        MacUILib_printf("You lost! The snake bumped into itself.\n");
-        myGM->setExitTrue(); // Exit the game loop
+        MacUILib_printf("\n===End of Game Message===\n");
+        MacUILib_printf("Game Over! You have exited the game.\n");
     }
+    
     
     // Continue clean up below
     delete myPlayer; 

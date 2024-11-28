@@ -17,6 +17,9 @@ Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
     playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2; 
     playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2; 
     playerPos.symbol = '*';
+    
+    // Construct snake body
+    snakeBody.insertTail(playerPos);  // Using snakeBody instead of myPlayer
 }
 
 // Destructor
@@ -56,7 +59,9 @@ void Player::updatePlayerDir()
 
         case 'g':  // test generate food
             playerFoodRef->generateFood(getPlayerPos());
-            //mainGameMechsRef->mainGameFoodRef(getPlayerPos());
+            break;
+        case 'q': // add segments
+            snakeBody.insertTail(playerPos);
             break;
         //======================================================
 
@@ -123,7 +128,7 @@ void Player::movePlayer()
 
         case DOWN:
             // Move player down but ensure we don't go past the boundary
-            if (playerPos.pos->y <= validMaxY) {
+            if (playerPos.pos->y < validMaxY) {
                 playerPos.pos->y += 1;
             } else {
                 // Wrap around to the top (valid area)
@@ -143,7 +148,7 @@ void Player::movePlayer()
 
         case RIGHT:
             // Move player right but ensure we don't go past the boundary
-            if (playerPos.pos->x <= validMaxX) {
+            if (playerPos.pos->x < validMaxX) {
                 playerPos.pos->x += 1;
             } else {
                 // Wrap around to the left (valid area)
@@ -155,7 +160,60 @@ void Player::movePlayer()
             // No movement if the direction is invalid
             break;
     }
+
+    // Update the player's position in the snake body
+    snakeBody.insertHead(playerPos);
+
+    // Check for self-collision
+    if (checkSelfCollision()) {
+        mainGameMechsRef->setLoseFlag();
+        return;
+    }
+
+    // Check for collision with food
+    objPos foodPos = playerFoodRef->getFoodPos();
+    // Check for collision with food
+    if(this->foodCollision(foodPos)) {
+        // Grow the snake
+        growSnake();
+    }else{
+        snakeBody.removeTail();
+    }
+
 }
 
-// More methods to be added
 
+// More methods to be added
+void  Player::growSnake(){
+    // INcrement the score
+    mainGameMechsRef->incrementScore();
+    // Generate new food
+    playerFoodRef->generateFood(getPlayerPos());
+}
+
+bool Player::foodCollision(objPos foodPos){
+    // Check for collision with food
+    if (playerPos.pos->x == foodPos.pos->x && playerPos.pos->y == foodPos.pos->y) {
+        size++;
+        return true;
+    }
+    return false;
+}
+
+bool Player::checkSelfCollision() {
+    // Only check for collisions if snake is moving
+    if(myDir == STOP) return false;
+    // Check for collisions with the snake's body
+    for(int i = 1; i < snakeBody.getSize(); i++) {
+        objPos currentSegment = snakeBody.getElement(i);
+        if (currentSegment.pos->x == playerPos.pos->x && currentSegment.pos->y == playerPos.pos->y) {
+            mainGameMechsRef->setLoseFlag();
+            return true; // Collision detected
+        }
+    }
+    return false; // No collision detected
+}
+
+int Player::getSize(){
+    return size;
+}
