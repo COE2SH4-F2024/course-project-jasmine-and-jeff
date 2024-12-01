@@ -20,14 +20,8 @@ class objPos
         
         // Respect the rule of six / minimum four
         // [TODO] Implement the missing special member functions to meet the minimum four rule
-
-        // Destructor
         ~objPos();
-
-        // Copy Constructor
 		objPos(const objPos& o);
-
-		// Copy Assignment Operator 
 		objPos& operator=(const objPos& o);
         
         // Setters
@@ -39,7 +33,6 @@ class objPos
         char getSymbol() const;
         char getSymbolIfPosEqual(const objPos* refPos) const;
         
-        // Other Interface Methods (Implementors)
         bool isPosEqual(const objPos* refPos) const;
 };
 

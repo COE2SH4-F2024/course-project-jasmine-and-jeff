@@ -18,18 +18,22 @@ class Player
     public:
         enum Dir {UP, DOWN, LEFT, RIGHT, STOP};  // This is the direction state
 
-        Player(GameMechs* thisGMRef, Food* thisFoodRe); // Constructor
-        
+        Player(GameMechs* thisGMRef, Food* thisFoodRef); // Constructor
         ~Player();
 
-        objPos getPlayerPos() const; // Upgrade this in iteration 3.       
+        objPosArrayList* getPlayerPos() const; // Upgrade this in iteration 3.      
         void updatePlayerDir();
         void movePlayer();
         
         // More methods to be added here
+        bool checkFoodConsumption(objPos &newHeadPos, objPos &foodPos);
+        void increasePlayerLength();
+        bool checkSelfCollision(objPos &newHeadPos, objPosArrayList &playerPosList);
 
     private:
-        objPos playerPos;  // Upgrade this in iteration 3.       
+        // objPos playerPos;  // Upgrade this in iteration 3.   
+        objPosArrayList* playerPosList;    
+        // i.e. aList[] = [(5, 3, '*'), (5, 4, '*'), (5, 5, '*')]
 
         enum Dir myDir;  // Declare a variable "myDir" to hold the current direction
 

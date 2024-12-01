@@ -15,7 +15,7 @@ GameMechs::GameMechs()
     score = 0;
 
     speed = 1;
-    delayAmount = 100000;
+    delayAmount = 400000;
 
     boardSizeX = 20; // Default constant width
     boardSizeY = 10; // Default constant height

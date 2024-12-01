@@ -7,16 +7,17 @@
 Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 {
     mainGameMechsRef = thisGMRef;
+    playerPosList = new objPosArrayList();
     playerFoodRef = thisFoodRef;
+
     myDir = STOP; // Set the initial direction of the player to STOP
 
-    // more actions to be included
+    // Insert temporary head position into list (Starting at middle of board)
+    objPos headPos(mainGameMechsRef->getBoardSizeX() / 2,
+                   mainGameMechsRef->getBoardSizeY() / 2,
+                '@');
 
-    // Construct player 
-    // Starting player position is at middle of board
-    playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2; 
-    playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2; 
-    playerPos.symbol = '*';
+    playerPosList->insertHead(headPos); // list contains only one element
 }
 
 // Destructor
@@ -24,16 +25,15 @@ Player::Player(GameMechs* thisGMRef, Food* thisFoodRef)
 Player::~Player()
 {
     // delete any heap members here
-    // no keyword "new" in the constructor
-    // leave the descructor empty FOR NOW
+    delete playerPosList;
 }
 
 // Other
 // ===================================================
-objPos Player::getPlayerPos() const
+objPosArrayList* Player::getPlayerPos() const
 {
-    // return the reference to the playerPos array list
-    return playerPos; // playerPos holds x, y and symbol 
+    // return the reference to the player objPos array list
+    return playerPosList; 
 }
 
 void Player::updatePlayerDir()
@@ -46,13 +46,9 @@ void Player::updatePlayerDir()
     {              
         // TEMPORARY DEBUG KEYS
         //=====================================================        
-        case 'i':  // test increment score
-            mainGameMechsRef->incrementScore();
-            break;
-
-        case 'l':  // test lose flag
-            mainGameMechsRef->setLoseFlag();
-            break;
+        // case 'i':  // test increment score
+        //     mainGameMechsRef->incrementScore();
+        //     break;
 
         case 'g':  // test generate food
             playerFoodRef->generateFood(getPlayerPos());
@@ -98,64 +94,126 @@ void Player::updatePlayerDir()
     mainGameMechsRef->clearInput(); // Clear the input after processing
 
 }
+
 void Player::movePlayer()
 {
-    // PPA3 Finite State Machine logic
     int boardSizeX = mainGameMechsRef->getBoardSizeX();
     int boardSizeY = mainGameMechsRef->getBoardSizeY();
-    
-    // Define valid ranges for player movement (excluding boundary)
-    int validMinX = 1;
-    int validMaxX = boardSizeX - 1;
-    int validMinY = 1;
-    int validMaxY = boardSizeY - 1;
 
-    switch (myDir) {
+    // Step 1: Create a temporary objPos to calculate the new head position
+    objPos tmpHead = playerPosList->getHeadElement();  // get head element of playerPosList
+    
+    switch(myDir) 
+    {
+        // Step 2: Calculate the new position of the head using the tmpHead objPos 
         case UP:
-            // Move player up but ensure we don't go past the boundary
-            if (playerPos.pos->y > validMinY) {
-                playerPos.pos->y -= 1;
-            } else {
-                // Wrap around to the bottom (valid area)
-                playerPos.pos->y = validMaxY;
+            tmpHead.pos->y--;
+             
+            if(tmpHead.pos->y == 0) { // if at top boundary wraparound to bottom
+                tmpHead.pos->y = boardSizeY - 2; // 10 - 2 = 8
             }
             break;
 
         case DOWN:
-            // Move player down but ensure we don't go past the boundary
-            if (playerPos.pos->y <= validMaxY) {
-                playerPos.pos->y += 1;
-            } else {
-                // Wrap around to the top (valid area)
-                playerPos.pos->y = validMinY;
+            tmpHead.pos->y++;
+
+            if(tmpHead.pos->y == boardSizeY - 1){ // if at bottom boundary wraparound to top
+                tmpHead.pos->y = 1; 
             }
             break;
 
         case LEFT:
-            // Move player left but ensure we don't go past the boundary
-            if (playerPos.pos->x > validMinX) {
-                playerPos.pos->x -= 1;
-            } else {
-                // Wrap around to the right (valid area)
-                playerPos.pos->x = validMaxX;
+            tmpHead.pos->x--;
+
+            if(tmpHead.pos->x == 0) { // if at left boundary wraparound to right
+                tmpHead.pos->x = boardSizeX - 2; // 10-2 = 18
             }
             break;
 
         case RIGHT:
-            // Move player right but ensure we don't go past the boundary
-            if (playerPos.pos->x <= validMaxX) {
-                playerPos.pos->x += 1;
-            } else {
-                // Wrap around to the left (valid area)
-                playerPos.pos->x = validMinX;
+            tmpHead.pos->x++;
+
+            if(tmpHead.pos->x == boardSizeX-1){ // if at right boundary wraparound to left
+                tmpHead.pos->x = 1;
             }
             break;
 
-        default:
-            // No movement if the direction is invalid
+        case STOP: // No movement
+        default: 
             break;
     }
+
+    // Step 3: Insert tmpHead objPos at the head of the list and remove the tail 
+    // This simulates the movement effect by:
+    // - Adding a new head segment (the snake moves forward in the new direction).
+    // - Removing the tail segment (maintains the same length).
+
+    /* i.e. Before insertHead:          playerPosList = [(5, 14, '*'), (5, 13, '*')]
+
+            After insertHead(tmpHead)                 = [(5, 15, '*'), (5, 14, '*'), (5, 13, '*')]
+            (new head at (5, 15))
+
+            After removeTail()                        = [(5, 15, '*'), (5, 14, '*')]  
+            (tail segment removed)                                                      
+            
+                              ****** MOVEMENT MAGIC COMPLETE ******    */
+    playerPosList->insertHead(tmpHead);  
+     
+    // Step 4: COLLISION LOGIC  
+    //===============================================
+    objPos foodPos = playerFoodRef->getFoodPos();
+
+    // Check if the new head position collides with the food
+    if(checkFoodConsumption(tmpHead, foodPos)) // If food is eaten
+    {
+        increasePlayerLength();  // Increase the snake's length
+        mainGameMechsRef->incrementScore();  // Increase score
+        playerFoodRef->generateFood(playerPosList); // Generate new food
+    }
+    else // No food consumed
+    {
+        if(checkSelfCollision(tmpHead, *playerPosList)) // If self-collision occurs
+        {
+            // If the snake collides with itself, don't remove the tail and end the game
+            mainGameMechsRef->setLoseFlag();  // Set lose flag
+            mainGameMechsRef->setExitTrue();  // Exit the game loop
+        }
+        else
+            playerPosList->removeTail(); // Remove tail to maintain constant length
+    }
+
 }
 
-// More methods to be added
 
+// More methods to be added
+bool Player::checkFoodConsumption(objPos &newHeadPos, objPos &foodPos)
+{
+    return newHeadPos.isPosEqual(&foodPos);
+}
+
+void Player::increasePlayerLength()
+{
+    int listSize = playerPosList->getSize();
+    listSize++;
+}
+
+bool Player::checkSelfCollision(objPos &newHeadPos, objPosArrayList &playerPosList)
+{
+    // Only check for collisions if snake is moving
+    if(myDir == STOP) return false;
+
+    bool selfCollision = false;
+
+    // Check for collisions with the snake's body
+    for(int i = 1; i < playerPosList.getSize(); i++) // Start from 1 to avoid checking the head
+    {
+        objPos thisSeg = playerPosList.getElement(i);  // Get the i-th segment of the snake
+
+        if(newHeadPos.isPosEqual(&thisSeg)) // Check if head position matches any body segment
+        {
+            selfCollision = true; // if so, then collision occured
+            break;
+        }      
+    }
+    return selfCollision;
+}

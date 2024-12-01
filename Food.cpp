@@ -17,25 +17,37 @@ Food::~Food()
 
 
 // Generate food
-void Food::generateFood(objPos blockOff)
+void Food::generateFood(objPosArrayList* blockOffList)
 {
     int randX; int randY;
 
-    // Infinite loop to keep generating until a valid position is found
-    while(true) 
+    bool validPosition = false;
+
+    // Loop to keep generating food coordinates until a valid position is found
+    do 
     {
         // Generate random x-y coordinates
-        randX = rand() % (myGM->getBoardSizeX()-1) + 1; // Generate x in the range [1, xRange-1] -> [1, 18]
-        randY = rand() % (myGM->getBoardSizeY()-1) + 1; // Generate y in the range [1, yRange-1] -> [1, 8]
+        randX = rand() % (myGM->getBoardSizeX()-2) + 1; // Generate x in the range -> [0,19-2]+1 -> [0,17]+1 -> [1, 18]
+        randY = rand() % (myGM->getBoardSizeY()-2) + 1; // Generate y in the range -> [0,9-2]+1  -> [0,7]+1  -> [1, 8]
 
-        // Check if the generated position does not conflict with the player's position
-        if(randX != blockOff.pos->x || randX != blockOff.pos->y)
+        validPosition = true;  
+
+        // iterate through every element in player snake
+        for(int i = 0; i < blockOffList->getSize(); i++) 
         {
-            // Valid position found, store it
-            foodPos.setObjPos(randX, randY, 'o');
-            break; // Exit the loop
+            objPos thisSeg = blockOffList->getElement(i);
+
+            // Check if the generated food position conflicts with any of the player's body positions
+            if(randX == thisSeg.pos->x && randY == thisSeg.pos->y) 
+            {
+                validPosition = false; 
+                break; 
+            }
         }
-    } 
+    } while(!validPosition);  // Continue generating food if the position is invalid
+
+    // Store the valid food position
+    foodPos.setObjPos(randX, randY, 'o');
 }
 
 
