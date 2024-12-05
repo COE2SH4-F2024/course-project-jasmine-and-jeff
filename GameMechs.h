@@ -13,8 +13,8 @@ class GameMechs
 {
     private:
         char input;
-        bool exitFlag = false;
-        bool loseFlag = false;
+        bool exitFlag;
+        bool loseFlag;
         int score;
 
         int boardSizeX;

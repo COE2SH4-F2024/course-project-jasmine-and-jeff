@@ -39,7 +39,7 @@ void Initialize(void)
     
     srand(time(NULL));
     
-    // Instantiate pointer to object on heap 
+    // Instantiate pointers to objects on heap 
     myGM = new GameMechs(); 
     myFood = new Food(myGM); 
     myPlayer = new Player(myGM, myFood);
@@ -55,13 +55,14 @@ void GetInput(void)
 
 void RunLogic(void)
 {  
+    // PPA2 Snake movement logic
     myPlayer->updatePlayerDir(); 
     myPlayer->movePlayer(); 
 }
 
 void DrawScreen(void)
 {
-    MacUILib_clearScreen(); // asynchronous non-blocking input
+    MacUILib_clearScreen(); 
     
     objPosArrayList* playerPos = myPlayer->getPlayerPos(); // Create an object that will receive player position
     int playerSize = playerPos->getSize(); 
@@ -69,7 +70,7 @@ void DrawScreen(void)
     objPos foodPos = myFood->getFoodPos();
 
     int boardX = myGM->getBoardSizeX(); // 20
-    int boardY = myGM->getBoardSizeY(); // 19
+    int boardY = myGM->getBoardSizeY(); // 10
 
     bool printFlag = false; // checks if player segment has been printed or not
 

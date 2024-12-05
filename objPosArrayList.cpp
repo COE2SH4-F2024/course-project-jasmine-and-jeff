@@ -24,32 +24,30 @@ int objPosArrayList::getSize() const
 void objPosArrayList::insertHead(objPos thisPos)
 {
     if (listSize >= arrayCapacity){
-        //std::cout << "Array is full." << std::endl;
+        std::cout << "Array is full." << std::endl;
         return;
     }
     for (int i = listSize; i > 0; --i){
         aList[i] = aList[i-1];
     }   
     aList[0] = thisPos;
-    aList[0].setObjPos(thisPos.pos->x, thisPos.pos->y, '*');
     listSize++;
 }
 
 void objPosArrayList::insertTail(objPos thisPos)
 {
     if (listSize >= arrayCapacity){
-        //std::cout << "Array is full." << std::endl;
+        std::cout << "Array is full." << std::endl;
         return;
     }
     aList[listSize] = thisPos;
-    aList[listSize].setObjPos(thisPos.pos->x, thisPos.pos->y, '*');
     listSize++;
 }
 
 void objPosArrayList::removeHead()
 {
     if (listSize == 0){
-        //std::cout << "Array is empty." << std::endl;
+        std::cout << "Array is empty." << std::endl;
         return;
     }
     for (int i = 0; i < listSize - 1; ++i){
@@ -61,7 +59,7 @@ void objPosArrayList::removeHead()
 void objPosArrayList::removeTail()
 {
     if (listSize == 0){
-        //std::cout << "Array is empty." << std::endl;
+        std::cout << "Array is empty." << std::endl;
         return;
     }
     listSize--;
@@ -70,7 +68,7 @@ void objPosArrayList::removeTail()
 objPos objPosArrayList::getHeadElement() const
 {
     if (listSize == 0){
-        //std::cout << "Array is empty." << std::endl;
+        std::cout << "Array is empty." << std::endl;
         return objPos();
     }
     return aList[0];
@@ -79,7 +77,7 @@ objPos objPosArrayList::getHeadElement() const
 objPos objPosArrayList::getTailElement() const
 {
     if (listSize == 0){
-        //std::cout << "Array is empty." << std::endl;
+        std::cout << "Array is empty." << std::endl;
         return objPos();
     }
     return aList[listSize - 1];
@@ -88,7 +86,7 @@ objPos objPosArrayList::getTailElement() const
 objPos objPosArrayList::getElement(int index) const
 {
     if (index < 0 || index >= listSize){
-        //std::cout << "Index out of range." << std::endl;
+        std::cout << "Index out of range." << std::endl;
         return objPos();
     }
     return aList[index];
